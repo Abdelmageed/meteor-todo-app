@@ -18,6 +18,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 var _meteorReactMeteorData = require('meteor/react-meteor-data');
 
 var _apiTasks = require('../api/tasks');
@@ -36,16 +40,25 @@ var App = (function (_Component) {
   }
 
   _createClass(App, [{
-    key: 'getTasks',
-    value: function getTasks() {
-      return [{ _id: 1, text: 'This is task 1' }, { _id: 2, text: 'This is task 2' }, { _id: 3, text: 'This is task 3' }];
-    }
-  }, {
     key: 'renderTasks',
     value: function renderTasks() {
       return this.props.tasks.map(function (task) {
         return _react2['default'].createElement(_TaskJsx2['default'], { key: task._id, task: task });
       });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+
+      var text = _reactDom2['default'].findDOMNode(this.refs.textInput).value.trim();
+
+      _apiTasks.Tasks.insert({
+        text: text,
+        createdAt: new Date()
+      });
+
+      _reactDom2['default'].findDOMNode(this.refs.textInput).value = '';
     }
   }, {
     key: 'render',
@@ -60,6 +73,15 @@ var App = (function (_Component) {
             'h1',
             null,
             'Todo List'
+          ),
+          _react2['default'].createElement(
+            'form',
+            { className: 'new-task', onSubmit: this.handleSubmit.bind(this) },
+            _react2['default'].createElement('input', {
+              type: 'text',
+              ref: 'textInput',
+              placeholder: 'Type to add new tasks'
+            })
           ),
           _react2['default'].createElement(
             'ul',
@@ -80,7 +102,7 @@ App.propTypes = {
 
 exports['default'] = (0, _meteorReactMeteorData.createContainer)(function () {
   return {
-    tasks: _apiTasks.Tasks.find({}).fetch()
+    tasks: _apiTasks.Tasks.find({}, { sort: { createdAt: -1 } }).fetch()
   };
 }, App);
 module.exports = exports['default'];
