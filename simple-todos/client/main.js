@@ -10,7 +10,7 @@ var _meteorMeteor = require('meteor/meteor');
 
 var _reactDom = require('react-dom');
 
-var _importsUiAppJsx = require('./imports/ui/App.jsx');
+var _importsUiAppJsx = require('../imports/ui/App.jsx');
 
 var _importsUiAppJsx2 = _interopRequireDefault(_importsUiAppJsx);
 

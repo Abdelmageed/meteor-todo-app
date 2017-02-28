@@ -18,6 +18,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _meteorReactMeteorData = require('meteor/react-meteor-data');
+
+var _apiTasks = require('../api/tasks');
+
 var _TaskJsx = require('./Task.jsx');
 
 var _TaskJsx2 = _interopRequireDefault(_TaskJsx);
@@ -39,7 +43,7 @@ var App = (function (_Component) {
   }, {
     key: 'renderTasks',
     value: function renderTasks() {
-      return this.getTasks().map(function (task) {
+      return this.props.tasks.map(function (task) {
         return _react2['default'].createElement(_TaskJsx2['default'], { key: task._id, task: task });
       });
     }
@@ -70,5 +74,13 @@ var App = (function (_Component) {
   return App;
 })(_react.Component);
 
-exports['default'] = App;
+App.propTypes = {
+  tasks: _react.PropTypes.array.isRequired
+};
+
+exports['default'] = (0, _meteorReactMeteorData.createContainer)(function () {
+  return {
+    tasks: _apiTasks.Tasks.find({}).fetch()
+  };
+}, App);
 module.exports = exports['default'];
