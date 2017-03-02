@@ -18,70 +18,42 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _apiTasks = require('../api/tasks');
+var _reactDom = require('react-dom');
 
-var Task = (function (_Component) {
-  _inherits(Task, _Component);
+var _reactDom2 = _interopRequireDefault(_reactDom);
 
-  function Task() {
-    _classCallCheck(this, Task);
+var _meteorTemplating = require('meteor/templating');
 
-    _get(Object.getPrototypeOf(Task.prototype), 'constructor', this).apply(this, arguments);
+var _meteorBlaze = require('meteor/blaze');
+
+var AccountsUIWrapper = (function (_Component) {
+  _inherits(AccountsUIWrapper, _Component);
+
+  function AccountsUIWrapper() {
+    _classCallCheck(this, AccountsUIWrapper);
+
+    _get(Object.getPrototypeOf(AccountsUIWrapper.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _createClass(Task, [{
-    key: 'toggleChecked',
-    value: function toggleChecked() {
-      Meteor.call('tasks.update', this.props.task._id, !this.props.task.checked);
+  _createClass(AccountsUIWrapper, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.view = _meteorBlaze.Blaze.render(_meteorTemplating.Template.loginButtons, _reactDom2['default'].findDOMNode(this.refs.container));
     }
   }, {
-    key: 'deleteThisTask',
-    value: function deleteThisTask() {
-      Meteor.call('tasks.remove', this.props.task._id);
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _meteorBlaze.Blaze.remove(this.view);
     }
   }, {
     key: 'render',
     value: function render() {
-
-      var taskClassName = this.props.task.checked ? 'checked' : '';
-
-      return _react2['default'].createElement(
-        'li',
-        { className: taskClassName },
-        _react2['default'].createElement(
-          'button',
-          {
-            className: 'delete',
-            onClick: this.deleteThisTask.bind(this) },
-          '×'
-        ),
-        _react2['default'].createElement('input', {
-          type: 'checkbox',
-          readOnly: true,
-          checked: this.props.task.checked,
-          onClick: this.toggleChecked.bind(this)
-        }),
-        _react2['default'].createElement(
-          'span',
-          { className: 'text' },
-          _react2['default'].createElement(
-            'strong',
-            null,
-            this.props.task.username
-          ),
-          ':',
-          this.props.task.text
-        )
-      );
+      return _react2['default'].createElement('span', { ref: 'container' });
     }
   }]);
 
-  return Task;
+  return AccountsUIWrapper;
 })(_react.Component);
 
-exports['default'] = Task;
-
-Task.propTypes = {
-  task: _react.PropTypes.object.isRequired
-};
+exports['default'] = AccountsUIWrapper;
 module.exports = exports['default'];
