@@ -24,6 +24,10 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _meteorReactMeteorData = require('meteor/react-meteor-data');
 
+var _AccountsUIWrapper = require('./AccountsUIWrapper');
+
+var _AccountsUIWrapper2 = _interopRequireDefault(_AccountsUIWrapper);
+
 var _apiTasks = require('../api/tasks');
 
 var _TaskJsx = require('./Task.jsx');
@@ -72,7 +76,9 @@ var App = (function (_Component) {
 
       _apiTasks.Tasks.insert({
         text: text,
-        createdAt: new Date()
+        createdAt: new Date(),
+        owner: Meteor.userId(),
+        username: Meteor.user().username
       });
 
       _reactDom2['default'].findDOMNode(this.refs.textInput).value = '';
@@ -92,6 +98,16 @@ var App = (function (_Component) {
             'Todo List ',
             this.props.incompleteTaskCount
           ),
+          _react2['default'].createElement(_AccountsUIWrapper2['default'], null),
+          this.props.currentUser ? _react2['default'].createElement(
+            'form',
+            { className: 'new-task', onSubmit: this.handleSubmit.bind(this) },
+            _react2['default'].createElement('input', {
+              type: 'text',
+              ref: 'textInput',
+              placeholder: 'Type to add new tasks'
+            })
+          ) : '',
           _react2['default'].createElement(
             'label',
             { className: 'hide-completed' },
@@ -102,15 +118,6 @@ var App = (function (_Component) {
               onClick: this.toggleHideCompleted.bind(this)
             }),
             'Hide Completed Tasks'
-          ),
-          _react2['default'].createElement(
-            'form',
-            { className: 'new-task', onSubmit: this.handleSubmit.bind(this) },
-            _react2['default'].createElement('input', {
-              type: 'text',
-              ref: 'textInput',
-              placeholder: 'Type to add new tasks'
-            })
           ),
           _react2['default'].createElement(
             'ul',
@@ -126,13 +133,17 @@ var App = (function (_Component) {
 })(_react.Component);
 
 App.propTypes = {
-  tasks: _react.PropTypes.array.isRequired
+  tasks: _react.PropTypes.array.isRequired,
+  incompleteTaskCount: _react.PropTypes.number.isRequired,
+  currentUser: _react.PropTypes.object
 };
 
 exports['default'] = (0, _meteorReactMeteorData.createContainer)(function () {
   return {
     tasks: _apiTasks.Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
-    incompleteTaskCount: _apiTasks.Tasks.find({ checked: { $ne: true } }).count()
+    incompleteTaskCount: _apiTasks.Tasks.find({ checked: { $ne: true } }).count(),
+    currentUser: Meteor.user()
+
   };
 }, App);
 module.exports = exports['default'];

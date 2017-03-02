@@ -66,6 +66,12 @@ var Task = (function (_Component) {
         _react2['default'].createElement(
           'span',
           { className: 'text' },
+          _react2['default'].createElement(
+            'strong',
+            null,
+            this.props.task.username
+          ),
+          ':',
           this.props.task.text
         )
       );

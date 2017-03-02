@@ -103,7 +103,9 @@ li.private {
 }
  
 header .hide-completed {
-  float: right;
+/*  float: right;
+  */
+  display: block;
 }
  
 .toggle-private {

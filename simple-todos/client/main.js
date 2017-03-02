@@ -14,6 +14,8 @@ var _importsUiAppJsx = require('../imports/ui/App.jsx');
 
 var _importsUiAppJsx2 = _interopRequireDefault(_importsUiAppJsx);
 
+require('../imports/startup/accounts-config.js');
+
 _meteorMeteor.Meteor.startup(function () {
   (0, _reactDom.render)(_react2['default'].createElement(_importsUiAppJsx2['default'], null), document.getElementById('render-target'));
 });
