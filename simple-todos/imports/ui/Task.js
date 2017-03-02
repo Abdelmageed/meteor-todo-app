@@ -18,6 +18,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _apiTasks = require('../api/tasks');
+
 var Task = (function (_Component) {
   _inherits(Task, _Component);
 
@@ -28,12 +30,44 @@ var Task = (function (_Component) {
   }
 
   _createClass(Task, [{
+    key: 'toggleChecked',
+    value: function toggleChecked() {
+      _apiTasks.Tasks.update(this.props.task._id, {
+        $set: { checked: !this.props.task.checked }
+      });
+    }
+  }, {
+    key: 'deleteThisTask',
+    value: function deleteThisTask() {
+      _apiTasks.Tasks.remove(this.props.task._id);
+    }
+  }, {
     key: 'render',
     value: function render() {
+
+      var taskClassName = this.props.task.checked ? 'checked' : '';
+
       return _react2['default'].createElement(
         'li',
-        null,
-        this.props.task.text
+        { className: taskClassName },
+        _react2['default'].createElement(
+          'button',
+          {
+            className: 'delete',
+            onClick: this.deleteThisTask.bind(this) },
+          '×'
+        ),
+        _react2['default'].createElement('input', {
+          type: 'checkbox',
+          readOnly: true,
+          checked: this.props.task.checked,
+          onClick: this.toggleChecked.bind(this)
+        }),
+        _react2['default'].createElement(
+          'span',
+          { className: 'text' },
+          this.props.task.text
+        )
       );
     }
   }]);
