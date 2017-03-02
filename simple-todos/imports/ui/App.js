@@ -33,16 +33,33 @@ var _TaskJsx2 = _interopRequireDefault(_TaskJsx);
 var App = (function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, arguments);
+    _get(Object.getPrototypeOf(App.prototype), 'constructor', this).call(this, props);
+
+    this.state = {
+      hideCompleted: false
+    };
   }
 
   _createClass(App, [{
+    key: 'toggleHideCompleted',
+    value: function toggleHideCompleted() {
+      this.setState({
+        hideCompleted: !this.state.hideCompleted
+      });
+    }
+  }, {
     key: 'renderTasks',
     value: function renderTasks() {
-      return this.props.tasks.map(function (task) {
+      var filteredTasks = this.props.tasks;
+      if (this.state.hideCompleted) {
+        filteredTasks = filteredTasks.filter(function (task) {
+          return !task.checked;
+        });
+      }
+      return filteredTasks.map(function (task) {
         return _react2['default'].createElement(_TaskJsx2['default'], { key: task._id, task: task });
       });
     }
@@ -72,7 +89,19 @@ var App = (function (_Component) {
           _react2['default'].createElement(
             'h1',
             null,
-            'Todo List'
+            'Todo List ',
+            this.props.incompleteTaskCount
+          ),
+          _react2['default'].createElement(
+            'label',
+            { className: 'hide-completed' },
+            _react2['default'].createElement('input', {
+              type: 'checkbox',
+              readOnly: true,
+              checked: this.state.hideCompleted,
+              onClick: this.toggleHideCompleted.bind(this)
+            }),
+            'Hide Completed Tasks'
           ),
           _react2['default'].createElement(
             'form',
@@ -102,7 +131,8 @@ App.propTypes = {
 
 exports['default'] = (0, _meteorReactMeteorData.createContainer)(function () {
   return {
-    tasks: _apiTasks.Tasks.find({}, { sort: { createdAt: -1 } }).fetch()
+    tasks: _apiTasks.Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
+    incompleteTaskCount: _apiTasks.Tasks.find({ checked: { $ne: true } }).count()
   };
 }, App);
 module.exports = exports['default'];
